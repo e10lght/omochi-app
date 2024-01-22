@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/dist/server.js",
   "scripts": {
-    "start": "node server/dist/server.js",
+    "start": "cd server && tsc && node dist/server.js",
     "dev": "cd client && vite",
     "build": "cd client && tsc && vite build",
     "test": "echo \"Error: no test specified\" && exit 1",
