@@ -1,0 +1,58 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
+      includeAssets: [
+        "offline.html",
+        "favicon.ico",
+        "robots.txt",
+        "apple-touch-icon.png",
+      ],
+      manifest: {
+        theme_color: "#f69435",
+        background_color: "#f69435",
+        display: "standalone",
+        scope: "/",
+        start_url: "/",
+        name: "omochi",
+        short_name: "omochi",
+        description:
+          "\u304a\u3082\u3061\u3092\u98fc\u80b2\u3059\u308b\u305f\u3081\u306e\u30a2\u30d7\u30ea",
+        icons: [
+          {
+            src: "/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/icon-256x256.png",
+            sizes: "256x256",
+            type: "image/png",
+          },
+          {
+            src: "/icon-384x384.png",
+            sizes: "384x384",
+            type: "image/png",
+          },
+          {
+            src: "/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
+    }),
+  ],
+  build: {
+    outDir: "./build",
+  },
+});
