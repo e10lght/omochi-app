@@ -17,11 +17,14 @@ import { Users } from "../models/Users.model";
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   synchronize: true,
   logging: true,
   entities: [Users, Meals, Cleaning, Links, Link_Categories, Comments],
   subscribers: [],
-  migrations: ["migraitons/*.ts"],
+  migrations: ["migrations/*.ts"],
 });
 
 AppDataSource.initialize()
