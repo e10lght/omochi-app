@@ -17,11 +17,6 @@ import { Users } from "../models/Users.model";
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: DATABASE_URL,
-  host: DATABASE_HOST,
-  port: Number(DATABASE_PORT),
-  username: DATABASE_NAME,
-  password: DATABASE_PASSSWORD,
-  database: DATABASE,
   synchronize: true,
   logging: true,
   entities: [Users, Meals, Cleaning, Links, Link_Categories, Comments],
