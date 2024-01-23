@@ -1,5 +1,5 @@
 declare namespace Express {
-    export interface Request {
-      auth?: { id: number; iat: number; exp: number };
-    }
+  export interface Request {
+    auth?: { userid: string; iat: number; exp: number };
   }
+}

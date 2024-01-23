@@ -8,14 +8,20 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/")
+    fetch("/api")
       .then((res) => res.json())
       .then((data) => console.log(data));
   }, []);
 
   const onClickHandler = async () => {
-    const res = await fetch("http://localhost:3000/api/");
+    const res = await fetch("/api/line/message/meals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
+    console.log(data);
     setMessage(data.message);
   };
 
