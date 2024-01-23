@@ -44,8 +44,13 @@ app.use(
     algorithms: ["HS256"],
     getToken: (req: Request) => req.cookies.token,
   }).unless({
-    path: ["/api/auth/login"],
-    method: ["OPTIONS"],
+    path: [
+      {
+        url: /^\/(?!api\/).*/,
+        methods: ["GET", "OPTIONS"],
+      },
+      { url: "/api/auth/login", methods: ["OPTIONS"] },
+    ],
   })
 );
 

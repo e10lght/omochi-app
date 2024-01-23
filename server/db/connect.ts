@@ -14,12 +14,13 @@ import { Link_Categories } from "../models/Link_Categories.model";
 import { Meals } from "../models/Meals.model";
 import { Users } from "../models/Users.model";
 
+const isProduction = process.env.NODE_ENV !== "dev";
+const sslConfig = isProduction ? { rejectUnauthorized: false } : false;
+
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: sslConfig,
   synchronize: true,
   logging: true,
   entities: [Users, Meals, Cleaning, Links, Link_Categories, Comments],
