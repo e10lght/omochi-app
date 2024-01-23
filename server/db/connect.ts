@@ -1,4 +1,11 @@
 import { DataSource } from "typeorm";
+import {
+  DATABASE,
+  DATABASE_HOST,
+  DATABASE_NAME,
+  DATABASE_PASSSWORD,
+  DATABASE_PORT,
+} from "../config/config";
 import { Cleaning } from "../models/Cleaning.model";
 import { Comments } from "../models/Comments.model";
 import { Links } from "../models/Links.model";
@@ -8,11 +15,11 @@ import { Users } from "../models/Users.model";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5439,
-  username: "postgres",
-  password: "passw0rd",
-  database: "postgres",
+  host: DATABASE_HOST,
+  port: Number(DATABASE_PORT),
+  username: DATABASE_NAME,
+  password: DATABASE_PASSSWORD,
+  database: DATABASE,
   synchronize: true,
   logging: true,
   entities: [Users, Meals, Cleaning, Links, Link_Categories, Comments],
