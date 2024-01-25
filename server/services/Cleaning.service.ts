@@ -13,22 +13,19 @@ export class CleaningService {
     message: string | null;
   }> {
     try {
-      const today = dayjs()
-        .startOf("day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
-      const tomorrow = dayjs()
-        .add(1, "day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
+      // dayjsはUTCで取得する（日本標準時はUTC+9）
+      const today = dayjs().startOf("day").toDate();
+      console.log(dayjs());
+      console.log(dayjs().startOf("day"));
+      console.log(today);
+      const tomorrow = dayjs().add(1, "day").startOf("day").toDate();
 
       const todayCleaning = await this.cleaningRepository.findOne({
         where: {
           createdat: Between(today, tomorrow),
         },
       });
+      console.log(todayCleaning);
       if (!todayCleaning) throw new Error("今日はまだ掃除をしていません！");
 
       return { result: true, todayCleaning, message: null };
