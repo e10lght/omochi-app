@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import { InputsType } from "../types/login";
 import { useLoginStore } from "../../../stores/useLoginStore";
-import { Button, Input, Stack, Text } from "@chakra-ui/react";
+import { Button, Input, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useUsersStore } from "../../../stores/useUsersStore";
+import { LoadingModal } from "../../../components/LoadingModal";
 
 const schema = z.object({
   emailOrUserid: z.string().min(1, "必須項目です"),
@@ -17,7 +20,11 @@ const schema = z.object({
 
 export const Login = () => {
   const { postLogin } = useLoginStore();
+  const { getLoggedInUser } = useUsersStore();
   const navigate = useNavigate();
+  const { onClose } = useDisclosure();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -27,6 +34,20 @@ export const Login = () => {
   } = useForm<InputsType>({
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    getLoggedInUser()
+      .then((_res) => {
+        setIsLoading(false);
+        navigate("/home");
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
+      });
+  }, []);
 
   const onSubmit: SubmitHandler<InputsType> = async (data) => {
     const res = await postLogin(data);
@@ -39,6 +60,8 @@ export const Login = () => {
 
   return (
     <>
+      <LoadingModal isLoading={isLoading} onClose={onClose} />
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2} mx={2}>
           <label htmlFor="emailOrUserid">
