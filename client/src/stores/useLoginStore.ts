@@ -38,6 +38,10 @@ export const useLoginStore = create<LoginStore>((set) => ({
         };
       }
 
+      if (data.token) {
+        localStorage.setItem("jwt", data.token);
+      }
+
       set({ user: data.user });
       return { user: data.user, message: data.message, status: res.status };
     } catch (error) {

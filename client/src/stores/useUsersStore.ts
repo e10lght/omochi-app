@@ -64,11 +64,14 @@ export const useUsersStore = create<CreateUserStore>((set) => ({
   },
   getLoggedInUser: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+      console.log(token);
       const res = await fetch(`/api/user`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
