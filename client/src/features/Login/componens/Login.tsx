@@ -39,9 +39,11 @@ export const Login = () => {
     setIsLoading(true);
 
     getLoggedInUser()
-      .then((_res) => {
+      .then((res) => {
         setIsLoading(false);
-        navigate("/home");
+        if (res.status === 200) {
+          navigate("/home");
+        }
       })
       .catch((err) => {
         console.error(err);

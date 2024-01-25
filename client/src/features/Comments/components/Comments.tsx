@@ -5,6 +5,7 @@ import {
   TabPanels,
   TabPanel,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useCommentsStore } from "../../../stores/useCommentsStore";
@@ -14,11 +15,15 @@ import { FooterCommentButton } from "./FooterCommentButton";
 import { Comment } from "../types/comments";
 import dayjs from "dayjs";
 import { LoadingModal } from "../../../components/LoadingModal";
+import { useNavigate } from "react-router-dom";
 
 export const Comments = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { getTodayComment, getMonthlyComments, createComment, createdComment } =
     useCommentsStore();
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const [todayComments, setTodayComments] = useState<Comment[]>([]);
   const [monthlyComments, setMonthlyComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +33,16 @@ export const Comments = () => {
 
     Promise.all([getTodayComment(), getMonthlyComments(dayjs().format())])
       .then(([mealsResponse, cleaningResponse]) => {
+        if (mealsResponse.status === 401) {
+          toast({
+            title: "セッションが切れました、\n再度ログインしてください",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+          navigate("/");
+        }
+
         setTodayComments(mealsResponse.todayComment);
         setMonthlyComments(cleaningResponse.monthlyComments);
         setIsLoading(false);

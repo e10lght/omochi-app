@@ -15,11 +15,14 @@ export const useLoginStore = create<LoginStore>((set) => ({
   user: null,
   postLogin: async (input: InputsType) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: input.emailOrUserid,

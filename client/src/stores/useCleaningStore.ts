@@ -42,11 +42,14 @@ export const useCleaningStore = create<CreateCleaningStore>((set) => ({
   monthlyCleaning: [],
   createCleaning: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/cleaning/create`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           timeOfDay: "",
@@ -85,11 +88,14 @@ export const useCleaningStore = create<CreateCleaningStore>((set) => ({
   },
   getTodayCleaning: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/cleaning/today`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -124,11 +130,14 @@ export const useCleaningStore = create<CreateCleaningStore>((set) => ({
   },
   getMonthlyCleaning: async (date: string) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/cleaning/monthly/${date}`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 

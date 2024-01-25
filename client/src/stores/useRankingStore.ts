@@ -19,11 +19,14 @@ export const useRankingStore = create<RankingStore>((set) => ({
   rankingAllTerm: [],
   getRankingAllTerm: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/ranking/all`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 

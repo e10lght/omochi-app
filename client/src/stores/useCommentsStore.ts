@@ -42,11 +42,14 @@ export const useCommentsStore = create<CreateCommentStore>((set) => ({
   monthlyComments: [],
   createComment: async (message: string) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/comment/create`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           message,
@@ -84,11 +87,14 @@ export const useCommentsStore = create<CreateCommentStore>((set) => ({
   },
   getTodayComment: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/comment/today`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -123,11 +129,14 @@ export const useCommentsStore = create<CreateCommentStore>((set) => ({
   },
   getMonthlyComments: async (date: string) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/comment/monthly/${date}`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 

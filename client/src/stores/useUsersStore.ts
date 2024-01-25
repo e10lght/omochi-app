@@ -24,11 +24,14 @@ export const useUsersStore = create<CreateUserStore>((set) => ({
   user: null,
   getUser: async (userid: string | undefined) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/user/${userid}`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -65,7 +68,7 @@ export const useUsersStore = create<CreateUserStore>((set) => ({
   getLoggedInUser: async () => {
     try {
       const token = localStorage.getItem("jwt");
-      console.log(token);
+
       const res = await fetch(`/api/user`, {
         method: "GET",
         credentials: "include",
@@ -107,11 +110,14 @@ export const useUsersStore = create<CreateUserStore>((set) => ({
   },
   updateUser: async (user: Partial<User>) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/user/update`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           user,

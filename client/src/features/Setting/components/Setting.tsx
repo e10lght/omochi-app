@@ -16,6 +16,7 @@ import { useUsersStore } from "../../../stores/useUsersStore";
 import { User } from "../../../types/users";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { LoadingModal } from "../../../components/LoadingModal";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   name: z.string().min(1, "必須項目です"),
@@ -35,7 +36,7 @@ type UpdatableUser = {
 export const Setting = () => {
   const { onClose } = useDisclosure();
   const toast = useToast();
-
+  const navigate = useNavigate();
   const { getLoggedInUser, updateUser } = useUsersStore();
 
   const [userInfo, setUserInfo] = useState<User | null>();
@@ -61,6 +62,15 @@ export const Setting = () => {
     setIsLoading(true);
 
     getLoggedInUser().then((data) => {
+      if (data.status === 401) {
+        toast({
+          title: "セッションが切れました、\n再度ログインしてください",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        navigate("/");
+      }
       setUserInfo(data.user);
       reset({
         name: data.user?.name,

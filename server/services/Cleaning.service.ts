@@ -19,7 +19,6 @@ export class CleaningService {
           createdDate: today,
         },
       });
-      console.log(todayCleaning);
       if (!todayCleaning) throw new Error("今日はまだ掃除をしていません！");
 
       return { result: true, todayCleaning, message: null };

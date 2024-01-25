@@ -1,13 +1,27 @@
-import { Box, Heading, Stack } from "@chakra-ui/react";
+import { Box, Heading, Stack, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Ranking, useRankingStore } from "../../../stores/useRankingStore";
 import { RankingItem } from "./RankingItem";
 
 export const CareRanking: React.FC<any> = () => {
   const { getRankingAllTerm, rankingAllTerm } = useRankingStore();
+  const toast = useToast();
+  const navigate = useNavigate();
+
   useEffect(() => {
     getRankingAllTerm()
-      .then((res) => console.info(res))
+      .then((res) => {
+        if (res.status === 401) {
+          toast({
+            title: "セッションが切れました、\n再度ログインしてください",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+          navigate("/");
+        }
+      })
       .catch((err) => console.error(err.message));
   }, []);
 

@@ -1,4 +1,4 @@
-import { Badge, useDisclosure } from "@chakra-ui/react";
+import { Badge, useDisclosure, useToast } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import ReactCalendar from "react-calendar";
@@ -10,9 +10,13 @@ import { useCleaningStore } from "../../stores/useCleaningStore";
 import { Cleaning } from "../../types/cleaning";
 import { Meal } from "../../types/meal";
 import { LoadingModal } from "../../components/LoadingModal";
+import { useNavigate } from "react-router-dom";
 
 export const Calendar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const [detail, setDetail] = useState<{
     morningMeal: Meal | undefined;
     dinnerMeal: Meal | undefined;
@@ -35,6 +39,16 @@ export const Calendar = () => {
       getMonthlyCleaning(dayjs(activeStartDate).format()),
     ])
       .then(([mealsResponse, cleaningResponse]) => {
+        if (mealsResponse.status === 401) {
+          toast({
+            title: "セッションが切れました、\n再度ログインしてください",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+          navigate("/");
+        }
+
         setMonthlyMeals(mealsResponse.monthlyMeals);
         setMonthlyCleaning(cleaningResponse.monthlyCleaning);
         setIsLoading(false);

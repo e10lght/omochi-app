@@ -43,11 +43,14 @@ export const useMealStore = create<CreateMealStore>((set) => ({
   monthlyMeals: [],
   createMeal: async (timeOfDay: string) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/meal/create`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           timeOfDay: timeOfDay,
@@ -86,11 +89,14 @@ export const useMealStore = create<CreateMealStore>((set) => ({
   },
   getTodayMeals: async () => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/meal/today`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -125,11 +131,14 @@ export const useMealStore = create<CreateMealStore>((set) => ({
   },
   getMonthlyMeals: async (date: string) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/meal/monthly/${date}`, {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 

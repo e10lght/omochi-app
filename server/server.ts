@@ -42,7 +42,15 @@ app.use(
   expressjwt({
     secret: SECRET_KEY,
     algorithms: ["HS256"],
-    getToken: (req: Request) => req.cookies.token,
+    getToken: (req: Request) => {
+      if (
+        req.headers.authorization &&
+        req.headers.authorization.split(" ")[0] === "Bearer"
+      ) {
+        return req.headers.authorization.split(" ")[1];
+      }
+      return undefined;
+    },
   }).unless({
     path: [
       { url: "/api/auth/login" },

@@ -16,11 +16,14 @@ export const useLineApiStore = create<LineApiStore>((_set) => ({
     timeOfDay: ("朝" | "夜") | undefined
   ) => {
     try {
+      const token = localStorage.getItem("jwt");
+
       const res = await fetch(`/api/line/message`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           isMeal,
