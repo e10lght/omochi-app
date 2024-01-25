@@ -25,7 +25,7 @@ export const HomeHandler = () => {
         <Header />
         <Stack spacing={4} mt={10}>
           <OmochiBaloon>
-            {user ? user?.name : "飼い主"}
+            {user ? user?.name : ""}
             さん、いつもお世話してくれてありがとう🐇❤
           </OmochiBaloon>
           <Care />

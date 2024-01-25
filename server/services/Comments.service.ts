@@ -18,6 +18,9 @@ export class CommentsService {
         where: {
           createdDate: today,
         },
+        order: {
+          id: "DESC",
+        },
       });
 
       if (todayComments.length === 0)
