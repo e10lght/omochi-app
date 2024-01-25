@@ -1,14 +1,5 @@
 import { create } from "zustand";
-
-type Meal = {
-  mealid: string;
-  status: string;
-  timeofday: string;
-  userid: string;
-  id: number;
-  createdat: string;
-  updatedat: string;
-};
+import { Meal } from "../types/meal";
 
 type TodayMeal = {
   todayMeal: Meal[];

@@ -49,13 +49,12 @@ export const Calendar = () => {
     if (view === "month") {
       const targetDate = dayjs(date);
       const matchingMeal = monthlyMeals.filter((meal) =>
-        dayjs(meal.createdat)
-          .add(9, "hours")
+        dayjs(meal.createdDate)
           .startOf("day")
           .isSame(dayjs(targetDate).startOf("day"), "day")
       );
       const matchingCleaning = monthlyCleaning.filter((c) => {
-        return dayjs(c.createdat)
+        return dayjs(c.createdDate)
           .add(9, "hours")
           .startOf("day")
           .isSame(dayjs(targetDate).startOf("day"), "day");
@@ -91,20 +90,15 @@ export const Calendar = () => {
   const onClickHandler = (e: any) => {
     const targetMealMorinig = monthlyMeals.find(
       (meal) =>
-        dayjs(meal.createdat).add(18, "hours").isSame(e, "day") &&
-        meal.timeofday === "朝"
+        dayjs(meal.createdDate).isSame(e, "day") && meal.timeofday === "朝"
     );
     const targetMealDinner = monthlyMeals.find(
       (meal) =>
-        dayjs(meal.createdat).add(18, "hours").isSame(e, "day") &&
-        meal.timeofday === "夜"
+        dayjs(meal.createdDate).isSame(e, "day") && meal.timeofday === "夜"
     );
 
     const targetCleaning = monthlyCleaning.find((c) => {
-      return dayjs(c.createdat)
-        .add(18, "hours")
-        .startOf("day")
-        .isSame(dayjs(e).startOf("day"), "day");
+      return dayjs(c.createdDate).isSame(dayjs(e).startOf("day"), "day");
     });
 
     const details = {

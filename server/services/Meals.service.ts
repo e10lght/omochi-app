@@ -13,20 +13,10 @@ export class MealsService {
     message: string | null;
   }> {
     try {
-      const today = dayjs()
-        .startOf("day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
-      const tomorrow = dayjs()
-        .add(1, "day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
-
+      const today = dayjs().format("YYYY/M/D");
       const todayMeals = await this.mealsRepository.find({
         where: {
-          createdat: Between(today, tomorrow),
+          createdDate: today,
         },
       });
       if (!todayMeals) throw new Error("今日はまだ食事をしていません！");
@@ -50,20 +40,17 @@ export class MealsService {
     try {
       if (!isValidDate(date)) throw new Error("正しい日付を入力してください！");
 
-      const startDate = dayjs(date)
-        .startOf("month")
-        .subtract(9, "hours")
-        .toDate();
-      const endDate = dayjs(date).endOf("month").subtract(9, "hours").toDate();
+      const today = dayjs(date).format("YYYY/M/");
+      const monthlyMeals = await this.mealsRepository
+        .createQueryBuilder("meals")
+        .where("meals.createdDate like :createdDate", {
+          createdDate: `${today}%`,
+        })
+        .getMany();
 
-      const meals = await this.mealsRepository.find({
-        where: {
-          createdat: Between(startDate, endDate),
-        },
-      });
-      if (!meals) throw new Error("食事のデータがありません！");
+      if (!monthlyMeals) throw new Error("食事のデータがありません！");
 
-      return { result: true, data: meals, message: null };
+      return { result: true, data: monthlyMeals, message: null };
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -92,6 +79,7 @@ export class MealsService {
       meal.status = status;
       meal.timeofday = timeOfDay;
       meal.userid = userid;
+      meal.createdDate = dayjs().format("YYYY/M/D");
 
       const createdMeal = await this.mealsRepository.save(meal);
       if (!createdMeal) {

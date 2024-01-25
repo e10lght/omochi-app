@@ -10,22 +10,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-
-type Meal = {
-  mealid: string;
-  userid: string;
-  status: string;
-  timeofday: string;
-  createdat: string;
-};
-
-type Cleaning = {
-  cleaningid: string;
-  userid: string;
-  status: string;
-  timeofday: string;
-  createdat: string;
-};
+import { Cleaning } from "../../types/cleaning";
+import { Meal } from "../../types/meal";
 
 type CarendarModalPlops = {
   isOpen: boolean;

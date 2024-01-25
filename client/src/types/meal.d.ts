@@ -4,6 +4,7 @@ export type Meal = {
   timeofday: string;
   userid: string;
   id: number;
+  createdDate: string;
   createdat: string;
   updatedat: string;
 };

@@ -25,5 +25,3 @@ export const setToFifteen = (date: Dayjs) => {
 
   return date.toISOString();
 };
-
-// テスト

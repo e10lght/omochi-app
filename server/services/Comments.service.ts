@@ -13,20 +13,10 @@ export class CommentsService {
     message: string | null;
   }> {
     try {
-      const today = dayjs()
-        .startOf("day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
-      const tomorrow = dayjs()
-        .add(1, "day")
-        .startOf("day")
-        .subtract(9, "hours")
-        .toDate();
-
+      const today = dayjs().format("YYYY/M/D");
       const todayComments = await this.commentsRepository.find({
         where: {
-          createdat: Between(today, tomorrow),
+          createdDate: today,
         },
       });
 
@@ -52,14 +42,14 @@ export class CommentsService {
     try {
       if (!isValidDate(date)) throw new Error("正しい日付を入力してください！");
 
-      const startDate = dayjs(date).startOf("month").toDate();
-      const endDate = dayjs(date).endOf("month").toDate();
+      const today = dayjs(date).format("YYYY/M/");
+      const monthlyComments = await this.commentsRepository
+        .createQueryBuilder("comments")
+        .where("comments.createdDate like :createdDate", {
+          createdDate: `${today}%`,
+        })
+        .getMany();
 
-      const monthlyComments = await this.commentsRepository.find({
-        where: {
-          createdat: Between(startDate, endDate),
-        },
-      });
       if (monthlyComments.length === 0)
         throw new Error("今月はコメントがまだありません！");
 
@@ -87,6 +77,7 @@ export class CommentsService {
       comment.commentid = uuidv4();
       comment.message = message;
       comment.userid = userid;
+      comment.createdDate = dayjs().format("YYYY/M/D");
 
       const createdComment = await this.commentsRepository.save(comment);
       if (!createdComment) {

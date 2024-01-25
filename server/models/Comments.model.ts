@@ -27,6 +27,12 @@ export class Comments {
   message!: string;
 
   @Column({
+    type: "varchar",
+    length: 255,
+  })
+  createdDate!: string;
+
+  @Column({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",
   })

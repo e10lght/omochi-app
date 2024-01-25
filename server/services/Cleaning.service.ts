@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { Between, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
-import utc from "dayjs/plugin/utc";
 import { Cleaning } from "../models/Cleaning.model";
 import { isValidDate, setToFifteen } from "../utils/util";
 
@@ -14,20 +13,10 @@ export class CleaningService {
     message: string | null;
   }> {
     try {
-      dayjs.extend(utc);
-
-      // dayjsはUTCで取得する（日本標準時はUTC+9）
-      const today = dayjs().utc().startOf("day").toDate();
-      console.log(dayjs());
-      console.log(dayjs().utc());
-      console.log(dayjs().utc().startOf("day"));
-      console.log(today);
-      console.log(setToFifteen(dayjs()));
-      const tomorrow = dayjs().utc().add(1, "day").startOf("day").toDate();
-
+      const today = dayjs().format("YYYY/M/D");
       const todayCleaning = await this.cleaningRepository.findOne({
         where: {
-          createdat: Between(today, tomorrow),
+          createdDate: today,
         },
       });
       console.log(todayCleaning);
@@ -52,17 +41,13 @@ export class CleaningService {
     try {
       if (!isValidDate(date)) throw new Error("正しい日付を入力してください！");
 
-      const startDate = dayjs(date)
-        .startOf("month")
-        .subtract(9, "hours")
-        .toDate();
-      const endDate = dayjs(date).endOf("month").subtract(9, "hours").toDate();
-
-      const monthlyCleaning = await this.cleaningRepository.find({
-        where: {
-          createdat: Between(startDate, endDate),
-        },
-      });
+      const today = dayjs(date).format("YYYY/M/");
+      const monthlyCleaning = await this.cleaningRepository
+        .createQueryBuilder("cleaning")
+        .where("cleaning.createdDate like :createdDate", {
+          createdDate: `${today}%`,
+        })
+        .getMany();
       if (!monthlyCleaning) throw new Error("食事のデータがありません！");
 
       return { result: true, monthlyCleaning, message: null };
@@ -90,6 +75,7 @@ export class CleaningService {
       cleaning.status = status;
       cleaning.userid = userid;
       cleaning.timeofday = "";
+      cleaning.createdDate = dayjs().format("YYYY/M/D");
 
       const createdCleaning = await this.cleaningRepository.save(cleaning);
       if (!createdCleaning) {

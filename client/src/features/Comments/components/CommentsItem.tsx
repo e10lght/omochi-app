@@ -25,7 +25,7 @@ export const CommentsItem: React.FC<PComments> = (props) => {
             <Text>{c.message}</Text>
             <Text fontSize="sm">
               作成日：
-              {dayjs(c.createdat).add(9, "hours").format("YYYY年M月D日")}
+              {dayjs(c.createdDate).format("YYYY年M月D日")}
             </Text>
           </Box>
         ))}
