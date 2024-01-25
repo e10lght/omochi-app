@@ -5,7 +5,7 @@ export class MealsController {
   constructor(private readonly mealsService: MealsService) {}
 
   async getTodayMealHandler(req: Request, res: Response) {
-    const todayMeal = await this.mealsService.getTodayMeal();
+    const todayMeal = await this.mealsService.getTodayMeals();
     if (!todayMeal.result) {
       return res.status(400).json({ message: todayMeal.message });
     }

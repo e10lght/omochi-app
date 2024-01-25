@@ -17,9 +17,7 @@ export class Cleaning {
   })
   cleaningid!: string;
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   userid!: string;
 
   @Column({

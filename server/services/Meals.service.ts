@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Between, LessThan, MoreThanOrEqual, Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { Meals } from "../models/Meals.model";
 import { v4 as uuidv4 } from "uuid";
 import { isValidDate } from "../utils/util";
@@ -7,24 +7,31 @@ import { isValidDate } from "../utils/util";
 export class MealsService {
   constructor(private readonly mealsRepository: Repository<Meals>) {}
 
-  async getTodayMeal(): Promise<{
+  async getTodayMeals(): Promise<{
     result: boolean;
-    data: Meals | null;
+    data: Meals[] | null;
     message: string | null;
   }> {
     try {
-      const today = dayjs().startOf("day").toDate();
-      const tomorrow = dayjs().add(1, "day").startOf("day").toDate();
+      const today = dayjs()
+        .startOf("day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
+      const tomorrow = dayjs()
+        .add(1, "day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
 
-      const todayMeal = await this.mealsRepository.findOne({
-        where: [
-          { createdat: MoreThanOrEqual(today) },
-          { createdat: LessThan(tomorrow) },
-        ],
+      const todayMeals = await this.mealsRepository.find({
+        where: {
+          createdat: Between(today, tomorrow),
+        },
       });
-      if (!todayMeal) throw new Error("今日はまだ食事をしていません！");
+      if (!todayMeals) throw new Error("今日はまだ食事をしていません！");
 
-      return { result: true, data: todayMeal, message: null };
+      return { result: true, data: todayMeals, message: null };
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -43,8 +50,11 @@ export class MealsService {
     try {
       if (!isValidDate(date)) throw new Error("正しい日付を入力してください！");
 
-      const startDate = dayjs(date).startOf("month").toDate();
-      const endDate = dayjs(date).endOf("month").toDate();
+      const startDate = dayjs(date)
+        .startOf("month")
+        .subtract(9, "hours")
+        .toDate();
+      const endDate = dayjs(date).endOf("month").subtract(9, "hours").toDate();
 
       const meals = await this.mealsRepository.find({
         where: {

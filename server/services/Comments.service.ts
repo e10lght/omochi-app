@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Between, LessThan, MoreThanOrEqual, Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { Comments } from "../models/Comments.model";
 import { isValidDate } from "../utils/util";
@@ -13,15 +13,23 @@ export class CommentsService {
     message: string | null;
   }> {
     try {
-      const today = dayjs().startOf("day").toDate();
-      const tomorrow = dayjs().add(1, "day").startOf("day").toDate();
+      const today = dayjs()
+        .startOf("day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
+      const tomorrow = dayjs()
+        .add(1, "day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
 
       const todayComments = await this.commentsRepository.find({
-        where: [
-          { createdat: MoreThanOrEqual(today) },
-          { createdat: LessThan(tomorrow) },
-        ],
+        where: {
+          createdat: Between(today, tomorrow),
+        },
       });
+
       if (todayComments.length === 0)
         throw new Error("今日はまだコメントがありません！");
 
@@ -29,10 +37,10 @@ export class CommentsService {
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
-        return { result: false, todayComments: null, message: error.message };
+        return { result: false, todayComments: [], message: error.message };
       }
       console.error(error);
-      return { result: false, todayComments: null, message: "不具合が発生" };
+      return { result: false, todayComments: [], message: "不具合が発生" };
     }
   }
 

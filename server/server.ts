@@ -45,11 +45,11 @@ app.use(
     getToken: (req: Request) => req.cookies.token,
   }).unless({
     path: [
+      { url: "/api/auth/login" },
       {
         url: /^\/(?!api\/).*/,
         methods: ["GET", "OPTIONS"],
       },
-      { url: "/api/auth/login", methods: ["OPTIONS"] },
     ],
   })
 );

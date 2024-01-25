@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Between, LessThan, MoreThanOrEqual, Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { Cleaning } from "../models/Cleaning.model";
 import { isValidDate } from "../utils/util";
@@ -13,14 +13,21 @@ export class CleaningService {
     message: string | null;
   }> {
     try {
-      const today = dayjs().startOf("day").toDate();
-      const tomorrow = dayjs().add(1, "day").startOf("day").toDate();
+      const today = dayjs()
+        .startOf("day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
+      const tomorrow = dayjs()
+        .add(1, "day")
+        .startOf("day")
+        .subtract(9, "hours")
+        .toDate();
 
       const todayCleaning = await this.cleaningRepository.findOne({
-        where: [
-          { createdat: MoreThanOrEqual(today) },
-          { createdat: LessThan(tomorrow) },
-        ],
+        where: {
+          createdat: Between(today, tomorrow),
+        },
       });
       if (!todayCleaning) throw new Error("今日はまだ掃除をしていません！");
 
@@ -43,8 +50,11 @@ export class CleaningService {
     try {
       if (!isValidDate(date)) throw new Error("正しい日付を入力してください！");
 
-      const startDate = dayjs(date).startOf("month").toDate();
-      const endDate = dayjs(date).endOf("month").toDate();
+      const startDate = dayjs(date)
+        .startOf("month")
+        .subtract(9, "hours")
+        .toDate();
+      const endDate = dayjs(date).endOf("month").subtract(9, "hours").toDate();
 
       const monthlyCleaning = await this.cleaningRepository.find({
         where: {

@@ -17,9 +17,7 @@ export class Comments {
   })
   commentid!: string;
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   userid!: string;
 
   @Column({

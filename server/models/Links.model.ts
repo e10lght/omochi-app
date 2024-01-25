@@ -1,4 +1,3 @@
-import { link } from "fs";
 import {
   Entity,
   Column,
@@ -7,7 +6,6 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Link_Categories } from "./Link_Categories.model";
-import { Users } from "./Users.model";
 
 @Entity()
 export class Links {

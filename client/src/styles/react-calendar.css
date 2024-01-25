@@ -1,0 +1,13 @@
+/* カレンダーを親要素の横幅いっぱいに */
+.react-calendar {
+  width: 100%;
+}
+
+/* カレンダーのナビゲーションラベルボタンのクリックを無効にする */
+.react-calendar__navigation__label {
+  pointer-events: none;
+}
+
+.react-calendar__month-view__days {
+  height: 300px;
+}
