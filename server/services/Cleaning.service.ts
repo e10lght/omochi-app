@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Between, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
+import utc from "dayjs/plugin/utc";
 import { Cleaning } from "../models/Cleaning.model";
 import { isValidDate } from "../utils/util";
 
@@ -13,12 +14,14 @@ export class CleaningService {
     message: string | null;
   }> {
     try {
+      dayjs.extend(utc);
+
       // dayjsはUTCで取得する（日本標準時はUTC+9）
-      const today = dayjs().startOf("day").toDate();
+      const today = dayjs().utc().startOf("day").toDate();
       console.log(dayjs());
-      console.log(dayjs().startOf("day"));
+      console.log(dayjs().utc().startOf("day"));
       console.log(today);
-      const tomorrow = dayjs().add(1, "day").startOf("day").toDate();
+      const tomorrow = dayjs().utc().add(1, "day").startOf("day").toDate();
 
       const todayCleaning = await this.cleaningRepository.findOne({
         where: {
